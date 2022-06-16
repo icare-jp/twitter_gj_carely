@@ -1,0 +1,13 @@
+[Unit]
+Description=Twitter GJ Carelyのプログラムが落ちたときに自動で再起動する設定
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/python3 /home/ec2-user/twitter_gj_carely/twitter_gj_carely.py
+Environment=PYTHONUNBUFFERED=1
+Restart=always
+Type=simple
+User=ec2-user
+
+[Install]
+WantedBy=multi-user.target
