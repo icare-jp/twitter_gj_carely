@@ -8,7 +8,7 @@
 
 <img width="599" alt="Twitterでの使用例" src="https://user-images.githubusercontent.com/72296262/174004038-f01974a8-95ca-49be-9eba-03596ea5e544.png">
 
-# 　使い方
+# 使い方
 
 ## 1. ただユーザーとして使いたい場合
 
