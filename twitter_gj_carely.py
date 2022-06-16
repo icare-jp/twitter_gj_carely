@@ -15,28 +15,21 @@ import datetime
 from pytz import timezone
 import users_dictionary
 
-# テストアカウント
-# consumer_key = os.environ.get("TEST_CONSUMER_KEY")
-# consumer_secret = os.environ.get("TEST_CONSUMER_SECRET")
-# access_token = os.environ.get("TEST_ACCESS_TOKEN")
-# access_token_secret = os.environ.get("TEST_ACCESS_TOKEN_SECRET")
-# bearer_token = os.environ.get("TEST_BEARER_TOKEN")
-
-# 公式アカウント
+# Twitterの認証情報
 consumer_key = os.environ.get("CONSUMER_KEY")
 consumer_secret = os.environ.get("CONSUMER_SECRET")
 access_token = os.environ.get("ACCESS_TOKEN")
 access_token_secret = os.environ.get("ACCESS_TOKEN_SECRET")
 bearer_token = os.environ.get("BEARER_TOKEN")
 
-# 本番DB
+# 接続するDBの情報
 host = os.environ.get("HOST")
 port = os.environ.get("PORT")
 dname = os.environ.get("DNAME")
 user = os.environ.get("DBUSER")
 password = os.environ.get("PASSWORD")
 
-Bot_twitter_id = "GJ_Carely" # Botの@なしのTwitterID 本番が"GJ_Carely" テストが"GJCarely_test"
+Bot_twitter_id = "GJ_Carely" # Botの@なしのTwitterID iCAREでは"GJ_Carely"
 
 # API V1.1
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
