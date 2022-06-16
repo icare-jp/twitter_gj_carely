@@ -135,7 +135,7 @@ def get_stream(headers):
             print("ConnectionResetErrorで例外キャッチ")
             print(e)
             run+=1
-            if run < 15:
+            if run < 11:
                 print(f'再接続します{run-1}回目：{2**run}秒sleep')
                 time.sleep(2**run)
                 continue
@@ -145,7 +145,7 @@ def get_stream(headers):
             print("ConnectionErrorで例外キャッチ")
             print(e)
             run+=1
-            if run < 15:
+            if run < 11:
                 print(f'再接続します{run-1}回目：{2**run}秒sleep')
                 time.sleep(2**run)
                 continue
@@ -155,7 +155,7 @@ def get_stream(headers):
             print("事前に把握していないエラーが発生したので5分待機して再接続を試みます")
             print(e)
             run+=1
-            if run < 15:
+            if run < 11:
                 print(f'再接続します{run-1}回目：{2**run}秒sleep')
                 time.sleep(2**run)
                 continue
