@@ -12,6 +12,7 @@ load_dotenv()
 import psycopg2
 import random
 import datetime
+from datetime import timedelta
 from pytz import timezone
 import users_dictionary
 
@@ -80,7 +81,7 @@ def set_rules(delete):
     print("3.set_rulesを実行")
     rules = [
         {
-            "value":f'@{Bot_twitter_id} - from:{Bot_twitter_id}'
+            "value":f'@{Bot_twitter_id} - from:{Bot_twitter_id} - is:retweet - is:quote'
         }
     ]
     payload = {"add": rules}
@@ -170,16 +171,21 @@ def get_points(name):
     if user_id:
         # 指定したidのポイントを取得
         cur.execute(f'SELECT rc.appreciation_count, rc.appreciation_date FROM receiver_counts rc WHERE rc.user_id={user_id} ORDER BY rc.created_at DESC LIMIT 1')
-        (appreciation_count, appreciation_date) = cur.fetchone()
+        (latest_appreciation_count, appreciation_date) = cur.fetchone()
 
         if appreciation_date == datetime.date.today():
             # 1ポイント加算してレコードを更新
-            appreciation_count += 1
-            cur.execute(f"UPDATE receiver_counts SET appreciation_count={appreciation_count} WHERE user_id={user_id} and appreciation_date=date'{datetime.date.today()}'")
+            latest_appreciation_count += 1
+            cur.execute(f"UPDATE receiver_counts SET appreciation_count={latest_appreciation_count} WHERE user_id={user_id} and appreciation_date=date'{datetime.date.today()}'")
         else:
             # 1ポイントでレコードを新規作成
-            appreciation_count = 1
-            cur.execute(f"INSERT INTO receiver_counts(appreciation_date, appreciation_count, created_at, updated_at, user_id) VALUES (date'{datetime.date.today()}', {appreciation_count}, timestamp'{datetime.datetime.now()}', timestamp'{datetime.datetime.now()}', {user_id})")
+            latest_appreciation_count = 1
+            cur.execute(f"INSERT INTO receiver_counts(appreciation_date, appreciation_count, created_at, updated_at, user_id) VALUES (date'{datetime.date.today()}', {latest_appreciation_count}, timestamp'{datetime.datetime.now()}', timestamp'{datetime.datetime.now()}', {user_id})")
+
+        # 今週の通算ポイントを取得
+        week_start_day = datetime.date.today() - timedelta(days=datetime.date.today().weekday())
+        cur.execute(f"SELECT SUM(rc.appreciation_count) FROM receiver_counts rc WHERE rc.user_id={user_id} AND rc.appreciation_date >= date'{week_start_day}'")
+        (appreciation_count, _) = cur.fetchone()
 
         conn.commit()
         cur.close()
@@ -248,23 +254,23 @@ def increment_giver_count(author_name):
     if user_id:
         # 指定したidのポイントを取得
         cur.execute(f'SELECT rc.appreciation_count, rc.appreciation_date FROM giver_counts rc WHERE rc.user_id={user_id} ORDER BY rc.created_at DESC LIMIT 1')
-        (appreciation_count, appreciation_date) = cur.fetchone()
+        (latest_appreciation_count, appreciation_date) = cur.fetchone()
 
         if appreciation_date == datetime.date.today():
             # 1ポイント加算してレコードを更新
-            appreciation_count += 1
-            cur.execute(f"UPDATE giver_counts SET appreciation_count={appreciation_count} WHERE user_id={user_id} and appreciation_date=date'{datetime.date.today()}'")
+            latest_appreciation_count += 1
+            cur.execute(f"UPDATE giver_counts SET appreciation_count={latest_appreciation_count} WHERE user_id={user_id} and appreciation_date=date'{datetime.date.today()}'")
         else:
             # 1ポイントでレコードを新規作成
-            appreciation_count = 1
-            cur.execute(f"INSERT INTO giver_counts(appreciation_date, appreciation_count, created_at, updated_at, user_id) VALUES (date'{datetime.date.today()}', {appreciation_count}, timestamp'{datetime.datetime.now()}', timestamp'{datetime.datetime.now()}', {user_id})")
+            latest_appreciation_count = 1
+            cur.execute(f"INSERT INTO giver_counts(appreciation_date, appreciation_count, created_at, updated_at, user_id) VALUES (date'{datetime.date.today()}', {latest_appreciation_count}, timestamp'{datetime.datetime.now()}', timestamp'{datetime.datetime.now()}', {user_id})")
 
         conn.commit()
         cur.close()
         conn.close()
     else:
-        appreciation_count = 0
-    return appreciation_count
+        latest_appreciation_count = 0
+    return latest_appreciation_count
 
 def main():
     rules = get_rules()
