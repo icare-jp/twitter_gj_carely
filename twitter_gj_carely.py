@@ -185,7 +185,7 @@ def get_points(name):
         # 今週の通算ポイントを取得
         week_start_day = datetime.date.today() - timedelta(days=datetime.date.today().weekday())
         cur.execute(f"SELECT SUM(rc.appreciation_count) FROM receiver_counts rc WHERE rc.user_id={user_id} AND rc.appreciation_date >= date'{week_start_day}'")
-        (appreciation_count, _) = cur.fetchone()
+        appreciation_count = cur.fetchone()[0]
 
         conn.commit()
         cur.close()
