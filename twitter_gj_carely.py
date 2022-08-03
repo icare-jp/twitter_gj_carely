@@ -193,6 +193,7 @@ def reply(response_line):
     tweet_id = int(json_response["data"]["id"])
     received_text = json_response["data"]["text"]
     names = [name for name in received_text.split() if name.startswith('@') and name != f'@{Bot_twitter_id}']
+    names = list(dict.fromkeys(names))
     combined_names = 'と'.join(names)
     reply_text = f'😎ヘイ、みんな！{combined_names} がほめられたよ！🤟' # Botが返信するテキスト
 
