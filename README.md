@@ -2,6 +2,8 @@
 
 [稼働しているTwitterアカウント（iCARE公式アカウント）](https://twitter.com/GJ_Carely)
 
+※ Twitter APIの無料枠縮小により、現在は稼働していません。
+
 # これはなに？
 
 感謝を伝えたい人と一緒にTwitter上でメンションすると褒めに来てくれるTwitter Botです。
